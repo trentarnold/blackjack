@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <title>BlackJack</title>
+</head>
+<body>
+    <div class='title'>
+      <div class='red-suit'>♥    ♦</div>
+      <div class='blackjack-title'>BlackJack</div>
+      <div class='black-suit'>♠   ♣</div>
+    </div>
+    <div class='dealer-total'></div>
+    <div class='dealer-hand'></div>
+    <div class='player-total'></div>
+    <div class=player-hand-container>
+      <div class='player-buttons'>
+        <button class='hit-button'>Hit</button>
+        <button class ='stay-button'>Stay</button>
+      </div> 
+    <div class='player-hand'> </div>
+    </div>
+  
+    <div class= 'end-game-module-container'>
+      <div class='end-game-module'>
+        <div class ='win-text'>
+          <div class='dealer-win-text'></div>
+          <div class='player-win-text'></div>
+        </div>
+        <div class = 'winner'></div>
+        <button class='restart'>Deal!</button>
+      </div>
+    </div>
+    <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+    <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+ /* Neon light animation taken almost directly from https://codepen.io/GeorgePark/pen/MrjbEr */
+ @import url(https://fonts.googleapis.com/css?family=Exo+2:200i);
+
+ :root {
+   --neon-text-color: #f40;
+   --neon-border-color: #08f;
+ }
+ /* setting title displays */
+ body {
+    margin:0;
+    font-family: 'IBM Plex Sans', sans-serif;
+    background-color: #068136;
+    background-image: url("https://www.transparenttextures.com/patterns/felt.png");
+    user-select: none;
+}
+ .title{
+     display: flex;
+     flex-direction: row;
+     font-size: 4rem;
+     justify-content: space-around;
+     text-shadow: 4px 4px 4px black ;
+ }
+.red-suit, .black-suit{
+    letter-spacing: 2rem;
+}
+ .red-suit{
+    color:red;
+}
+.black-suit{
+    text-shadow: 1px 1px 1px white; 
+}
+.blackjack-title {
+    font-size: 6rem;
+    font-weight: bolder;
+    border-radius: 2rem;
+    color: rgb(212, 209, 209);
+} 
+/* for the dealer and player hand, score, hit and stay buttons */
+.dealer-hand, .player-hand {
+
+    height: 250px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+} 
+.dealer-hand{
+    width: calc(100vw -128px);
+    /* add +100 margin-left for stacking cards */
+    margin-left: 128px;
+}
+.player-hand{
+    width: 100vw;
+}
+.player-hand-container{
+    display: flex;
+    flex-direction: row;
+}
+.player-buttons{
+    display: flex;
+    flex-direction: column;
+    min-width: 8rem;
+    border-radius: 10%;
+}
+.hit-button, .stay-button {
+    font-size: 2.5rem;
+    height: 7rem;
+    box-shadow:3px 3px 3px black;
+    background-color: rgb(212, 209, 209);
+    text-shadow: 1px 1px 1px black;
+    border-radius: 5%;
+    border: 1.5px solid black;
+    /* add margin right 100 for stacking cards */
+}
+.hit-button {
+    margin: 4px 8px;
+}
+.stay-button{
+    margin: 2px 8px;
+}
+.hit-button:hover, .stay-button:hover{
+    background-color:rgba(255,255,255,.2);
+    color: white;
+    text-shadow: 2.5px 2.5px 2.5px black;
+    border: 1.5px solid white;
+}
+.hit-button:focus, .stay-button:focus{
+    outline: none;
+}
+/* for the cards */
+/* i got the idea for using the before after for placing two of
+the same data-values from https://www.youtube.com/watch?v=NxRwIZWjLtE */
+.card {
+    width: 10rem;
+    height: 14rem;
+    background-color: rgb(212, 209, 209);
+    /* for stacking cards */
+    /* margin-left: -20px; */
+    margin: 5px;
+    border: 1.5px solid black;
+    border-radius: 5%;
+    box-shadow:3px 3px 3px black;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100px;
+}
+.card::before, .card::after {
+    /* get the content for the before and after from data-value */
+    content: attr(data-value);
+    font-size: 1.5rem;
+    position: absolute;
+}
+.card::before {
+    top:.5rem;
+    left: .5rem;
+}
+.card::after {
+    bottom:.5rem;
+    right: .5rem;
+    transform: rotate(180deg); 
+}
+.card.hidden::before, .card.hidden::after{
+    color: transparent;
+}
+.card.hidden{
+    /* adaptation from https://codepen.io/karaWhiteDragon/pen/zYGGMya */
+    background-image: repeating-linear-gradient(transparent, transparent 20px, purple 20px, purple 20px, transparent 5px, transparent 2px, purple 20px, purple 20px, transparent 6px, transparent 11px, rgba(0,0,0,.5) 11px, rgba(0,0,0,.5) 16px, rgba(255,255,255,.2) 16px, rgba(255,255,255,.2) 16px, rgba(0,0,0,.5) 16px, rgba(0,0,0,.5) 19px, rgba(255,255,255,.2) 17px, rgba(255,255,255,.2) 18px, rgba(0,0,0,.5) 18px, rgba(0,0,0,.5) 23px, transparent 23px),  
+  repeating-linear-gradient(270deg, transparent, transparent 5px, purple 20px, purple 20px, transparent 3px, transparent 6px, purple 3px, purple 20px, transparent 6px, transparent 16px, rgba(0,0,0,.5) 16px, rgba(0,0,0,.5) 16px, rgba(255,255,255,.2) 16px, rgba(255,255,255,.2) 16px, rgba(0,0,0,.5) 16px, rgba(0,0,0,.5) 17px, rgba(255,255,255,.2) 17px, rgba(255,255,255,.2) 18px, rgba(0,0,0,.5) 18px, rgba(0,0,0,.5) 23px, transparent 23px);
+    color: transparent !important; 
+}
+.player-total, .dealer-total{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3.5rem;
+    text-shadow: 1px 1px 1px white;
+}
+
+/* end game module and button */
+
+.end-game-module-container {
+  display: none;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;  
+  background: rgba(0,0,0,.6);
+  height: 100vh;
+  width: 100vw;
+}
+.end-game-module-container.show{
+    display: flex;
+}
+.restart{
+    background: #000;
+    font-size: 2.5rem;
+    /* set animation to paused for a more consistent look */
+    animation: flicker 10s 0s none paused;
+    color: #fff;
+    padding: 1rem 1rem 1rem;
+    border: 0.4rem solid #fff;
+    display: flex;
+    border-radius: 2rem;
+}
+.restart:hover {
+    color:#000;
+    background: #fff;
+    border: 0.4rem solid #000;
+  }
+  /* need to make position relative so i can set dealer and player win text to absolute */
+.end-game-module {
+  background: #000;
+  font-size: 5rem;
+  font-weight: 200;
+  color: #fff;
+  padding: 4rem 6rem 5.5rem;
+  border: 0.4rem solid #fff;
+  border-radius: 2rem;
+  height: 50vh;
+  width: 50vw;
+  /* set animation to paused for a more consistent look */
+  animation: flicker 10s 0s none paused;  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;   
+  position: relative;
+}
+.win-text {
+   font-size: 2rem;
+}
+.dealer-win-text {
+    top: 2rem;
+    left: 4rem;
+} 
+ .player-win-text{
+    top: 2rem;
+    right: 4rem;
+}
+.dealer-win-text, .player-win-text{
+    position: absolute;
+}
+/* Animate neon flicker */
+@keyframes flicker {
+    
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+      
+        text-shadow:
+            -0.2rem -0.2rem 1rem #fff,
+            0.2rem 0.2rem 1rem #fff,
+            0 0 2rem var(--neon-text-color),
+            0 0 4rem var(--neon-text-color),
+            0 0 6rem var(--neon-text-color),
+            0 0 8rem var(--neon-text-color),
+            0 0 10rem var(--neon-text-color);
+        
+        box-shadow:
+            0 0 .5rem #fff,
+            inset 0 0 .5rem #fff,
+            0 0 2rem var(--neon-border-color),
+            inset 0 0 2rem var(--neon-border-color),
+            0 0 4rem var(--neon-border-color),
+            inset 0 0 4rem var(--neon-border-color);        
+    }
+    
+    20%, 24%, 55% {        
+        text-shadow: none;
+        box-shadow: none;
+    }    
+}
+/* for not implementing second neon light section */
+/* .restart {
+    box-shadow: 1px 1px 1px  var(--neon-text-color);
+    text-shadow: 3px 3px 3px var(--neon-text-color);
+    color: #fff;
+    background-color: var(--neon-border-color);
+    font-size: 2.5rem;
+    border-radius: 10%;
+}
+.restart:hover{
+    box-shadow: 1px 1px 1px  var(--neon-border-color);
+    text-shadow: 3px 3px 3px var(--neon-border-color);
+    color: #000;
+    background-color: var(--neon-text-color);
+} */
